@@ -18,6 +18,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
@@ -28,7 +29,8 @@ public class Board extends JPanel implements ActionListener {
     private final int DOT_SIZE = 10;
     private final int ALL_DOTS = 900;
     private final int RAND_POS = 29;
-    private final int DELAY = 140;
+
+    private int DELAY = 240; // Default delay
 
     private final int x[] = new int[ALL_DOTS];
     private final int y[] = new int[ALL_DOTS];
@@ -51,12 +53,12 @@ public class Board extends JPanel implements ActionListener {
     private Image head;
     private JButton startButton;
     private JButton restartButton;
-    
+    private JComboBox<String> difficultyBox;
 
     public Board() {
         initBoard();
     }
-    
+
     private void initBoard() {
         addKeyListener(new TAdapter());
         setBackground(Color.black);
@@ -64,18 +66,23 @@ public class Board extends JPanel implements ActionListener {
         setPreferredSize(new Dimension(B_WIDTH, B_HEIGHT));
         loadImages();
         loadHighScore();
-        
+
         startButton = new JButton("Start");
         startButton.setBounds(B_WIDTH / 2 - 50, B_HEIGHT / 2 - 25, 100, 50);
         startButton.addActionListener(e -> startGame());
         add(startButton);
-        
+
         restartButton = new JButton("Restart");
         restartButton.setBounds(B_WIDTH / 2 - 50, B_HEIGHT / 2 - 25, 100, 50);
         restartButton.addActionListener(e -> restartGame());
         restartButton.setVisible(false);
         add(restartButton);
-        
+
+        String[] difficulties = {"Easy", "Normal", "Hard"};
+        difficultyBox = new JComboBox<>(difficulties);
+        difficultyBox.setBounds(B_WIDTH / 2 - 50, B_HEIGHT / 2 + 35, 100, 25);
+        add(difficultyBox);
+
         setLayout(null);
     }
 
@@ -91,7 +98,21 @@ public class Board extends JPanel implements ActionListener {
     }
 
     private void startGame() {
+        String selectedDifficulty = (String) difficultyBox.getSelectedItem();
+        switch (selectedDifficulty) {
+            case "Easy":
+                DELAY = 240;
+                break;
+            case "Normal":
+                DELAY = 160;
+                break;
+            case "Hard":
+                DELAY = 80;
+                break;
+        }
+
         startButton.setVisible(false);
+        difficultyBox.setVisible(false);
         restartButton.setVisible(false);
         inGame = true;
         score = 0;
@@ -112,7 +133,7 @@ public class Board extends JPanel implements ActionListener {
             x[z] = 50 - z * 10;
             y[z] = 50;
         }
-        
+
         locateApple();
 
         if (timer != null) {
@@ -127,7 +148,7 @@ public class Board extends JPanel implements ActionListener {
         super.paintComponent(g);
         doDrawing(g);
     }
-    
+
     private void doDrawing(Graphics g) {
         if (inGame) {
             g.drawImage(apple, apple_x, apple_y, this);
@@ -146,7 +167,7 @@ public class Board extends JPanel implements ActionListener {
             Toolkit.getDefaultToolkit().sync();
         } else {
             gameOver(g);
-        }        
+        }
     }
 
     private void drawScore(Graphics g) {
@@ -239,7 +260,7 @@ public class Board extends JPanel implements ActionListener {
         if (x[0] < 0) {
             inGame = false;
         }
-        
+
         if (!inGame) {
             timer.stop();
         }
