@@ -52,7 +52,10 @@ public class Board extends JPanel implements ActionListener {
     private Image apple;
     private Image head;
     private JButton startButton;
-    private JButton restartButton;
+    private JButton restartButton;    
+    private boolean isPaused = false;
+    private JButton resumeButton;
+    private JButton mainMenuButton;
     private JComboBox<String> difficultyBox;
 
     public Board() {
@@ -84,6 +87,20 @@ public class Board extends JPanel implements ActionListener {
         add(difficultyBox);
 
         setLayout(null);
+
+        resumeButton = new JButton("Resume");
+        resumeButton.setBounds(B_WIDTH / 2 - 50, B_HEIGHT / 2 - 25, 100, 50);
+        resumeButton.addActionListener(e -> resumeGame());
+        resumeButton.setVisible(false);
+        add(resumeButton);
+
+        mainMenuButton = new JButton("Main Menu");
+        mainMenuButton.setBounds(B_WIDTH / 2 - 50, B_HEIGHT / 2 + 35, 100, 50);
+        mainMenuButton.addActionListener(e -> showMainMenu());
+        mainMenuButton.setVisible(false);
+        add(mainMenuButton);
+
+        setLayout(null);
     }
 
     private void loadImages() {
@@ -96,6 +113,32 @@ public class Board extends JPanel implements ActionListener {
         ImageIcon iih = new ImageIcon("src/main/resources/head.png");
         head = iih.getImage();
     }
+
+    private void pauseGame() {
+        isPaused = true;
+        timer.stop();
+        resumeButton.setVisible(true);
+        mainMenuButton.setVisible(true);
+        repaint();
+    }
+    
+    private void resumeGame() {
+        isPaused = false;
+        timer.start();
+        resumeButton.setVisible(false);
+        mainMenuButton.setVisible(false);
+        repaint();
+    }
+    
+    private void showMainMenu() {
+        isPaused = false;
+        inGame = false;
+        startButton.setVisible(true);
+        difficultyBox.setVisible(true);
+        resumeButton.setVisible(false);
+        mainMenuButton.setVisible(false);
+    }
+    
 
     private void startGame() {
         String selectedDifficulty = (String) difficultyBox.getSelectedItem();
@@ -149,6 +192,7 @@ public class Board extends JPanel implements ActionListener {
         doDrawing(g);
     }
 
+    // Modify the doDrawing method to include the pause overlay
     private void doDrawing(Graphics g) {
         if (inGame) {
             g.drawImage(apple, apple_x, apple_y, this);
@@ -164,10 +208,19 @@ public class Board extends JPanel implements ActionListener {
             drawScore(g);
             drawHighScore(g);
 
-            Toolkit.getDefaultToolkit().sync();
+            if (isPaused) {
+                drawPauseOverlay(g);
+            }
         } else {
             gameOver(g);
         }
+    }
+
+    // Update the drawPauseOverlay method to 80% transparency
+    private void drawPauseOverlay(Graphics g) {
+        Color overlayColor = new Color(0, 0, 0, 204); // 80% transparent black
+        g.setColor(overlayColor);
+        g.fillRect(0, 0, B_WIDTH, B_HEIGHT);
     }
 
     private void drawScore(Graphics g) {
@@ -292,42 +345,56 @@ public class Board extends JPanel implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (inGame) {
+        if (inGame && !isPaused) {
             checkApple();
             checkCollision();
             move();
         }
-
+    
         repaint();
     }
 
+    // Handle ESC key press to pause the game
     private class TAdapter extends KeyAdapter {
         @Override
         public void keyPressed(KeyEvent e) {
             int key = e.getKeyCode();
 
-            if ((key == KeyEvent.VK_LEFT) && (!rightDirection)) {
-                leftDirection = true;
-                upDirection = false;
-                downDirection = false;
+            if (key == KeyEvent.VK_ESCAPE) {
+                if (inGame) {
+                    if (isPaused) {
+                        resumeGame();
+                    } else {
+                        pauseGame();
+                    }
+                }
             }
 
-            if ((key == KeyEvent.VK_RIGHT) && (!leftDirection)) {
-                rightDirection = true;
-                upDirection = false;
-                downDirection = false;
-            }
-
-            if ((key == KeyEvent.VK_UP) && (!downDirection)) {
-                upDirection = true;
-                rightDirection = false;
-                leftDirection = false;
-            }
-
-            if ((key == KeyEvent.VK_DOWN) && (!upDirection)) {
-                downDirection = true;
-                rightDirection = false;
-                leftDirection = false;
+            // Existing key handling logic...
+            if (!isPaused) {
+                if ((key == KeyEvent.VK_LEFT) && (!rightDirection)) {
+                    leftDirection = true;
+                    upDirection = false;
+                    downDirection = false;
+                }
+    
+                if ((key == KeyEvent.VK_RIGHT) && (!leftDirection)) {
+                    rightDirection = true;
+                    upDirection = false;
+                    downDirection = false;
+                }
+    
+                if ((key == KeyEvent.VK_UP) && (!downDirection)) {
+                    upDirection = true;
+                    rightDirection = false;
+                    leftDirection = false;
+                }
+    
+                if ((key == KeyEvent.VK_DOWN) && (!upDirection)) {
+                    downDirection = true;
+                    rightDirection = false;
+                    leftDirection = false;
+                }
             }
         }
     }
