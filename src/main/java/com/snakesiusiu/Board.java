@@ -58,7 +58,10 @@ public class Board extends JPanel implements ActionListener {
     private JButton mainMenuButton;
     private JComboBox<String> difficultyBox;
 
-    public Board() {
+    private ScorePanel scorePanel; // Add this line
+
+    public Board(ScorePanel scorePanel) { // Modify constructor
+        this.scorePanel = scorePanel; // Initialize scorePanel
         initBoard();
     }
 
@@ -205,8 +208,6 @@ public class Board extends JPanel implements ActionListener {
                 }
             }
 
-            drawScore(g);
-            drawHighScore(g);
 
             if (isPaused) {
                 drawPauseOverlay(g);
@@ -223,25 +224,6 @@ public class Board extends JPanel implements ActionListener {
         g.fillRect(0, 0, B_WIDTH, B_HEIGHT);
     }
 
-    private void drawScore(Graphics g) {
-        String msg = "Score: " + score;
-        Font small = new Font("Helvetica", Font.BOLD, 14);
-        FontMetrics metr = getFontMetrics(small);
-
-        g.setColor(Color.white);
-        g.setFont(small);
-        g.drawString(msg, 10, 20);
-    }
-
-    private void drawHighScore(Graphics g) {
-        String msg = "High Score: " + highScore;
-        Font small = new Font("Helvetica", Font.BOLD, 14);
-        FontMetrics metr = getFontMetrics(small);
-
-        g.setColor(Color.white);
-        g.setFont(small);
-        g.drawString(msg, 10, 40);
-    }
 
     private void gameOver(Graphics g) {
         String msg = "Game Over";
@@ -255,6 +237,7 @@ public class Board extends JPanel implements ActionListener {
         if (score > highScore) {
             highScore = score;
             saveHighScore();
+            scorePanel.setHighScore(highScore); // Update high score in ScorePanel
         }
 
         restartButton.setVisible(true);
@@ -264,6 +247,7 @@ public class Board extends JPanel implements ActionListener {
         if ((x[0] == apple_x) && (y[0] == apple_y)) {
             dots++;
             score += 10;
+            scorePanel.setScore(score); // Update score in ScorePanel
             locateApple();
         }
     }
@@ -330,8 +314,10 @@ public class Board extends JPanel implements ActionListener {
     private void loadHighScore() {
         try (BufferedReader reader = new BufferedReader(new FileReader("highscore.txt"))) {
             highScore = Integer.parseInt(reader.readLine());
+            scorePanel.setHighScore(highScore); // Set initial high score in ScorePanel
         } catch (IOException | NumberFormatException e) {
             highScore = 0;
+            scorePanel.setHighScore(highScore); // Set initial high score in ScorePanel
         }
     }
 
