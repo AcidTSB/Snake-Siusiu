@@ -30,7 +30,7 @@ public class Board extends JPanel implements ActionListener {
     private final int ALL_DOTS = 900;
     private final int RAND_POS = 29;
 
-    private int DELAY = 240; // Default delay
+    private int DELAY = 240; // Độ trễ mặc định
 
     private final int x[] = new int[ALL_DOTS];
     private final int y[] = new int[ALL_DOTS];
@@ -58,16 +58,16 @@ public class Board extends JPanel implements ActionListener {
     private JButton mainMenuButton;
     private JComboBox<String> difficultyBox;
 
-    private ScorePanel scorePanel; // Add this line
+    private ScorePanel scorePanel; // Thêm dòng này
 
-    public Board(ScorePanel scorePanel) { // Modify constructor
-        this.scorePanel = scorePanel; // Initialize scorePanel
+    public Board(ScorePanel scorePanel) { // Sửa đổi hàm tạo
+        this.scorePanel = scorePanel; // Khởi tạo scorePanel
         initBoard();
     }
 
     private void initBoard() {
-        addKeyListener(new TAdapter());
-        setBackground(Color.black);
+        addKeyListener(new TAdapter()); // Lắng nghe sự kiện từ bàn phím
+        setBackground(Color.black); // Thiết lập nền và kích thước
         setFocusable(true);
         setPreferredSize(new Dimension(B_WIDTH, B_HEIGHT));
         loadImages();
@@ -144,7 +144,7 @@ public class Board extends JPanel implements ActionListener {
     
 
     private void startGame() {
-        String selectedDifficulty = (String) difficultyBox.getSelectedItem();
+        String selectedDifficulty = (String) difficultyBox.getSelectedItem(); // Chọn độ khó
         switch (selectedDifficulty) {
             case "Easy":
                 DELAY = 240;
@@ -157,15 +157,15 @@ public class Board extends JPanel implements ActionListener {
                 break;
         }
 
-        startButton.setVisible(false);
+        startButton.setVisible(false); // Ẩn giao diện menu
         difficultyBox.setVisible(false);
         restartButton.setVisible(false);
-        inGame = true;
+        inGame = true; // Khởi tạo trò chơi
         score = 0;
         initGame();
     }
 
-    private void restartGame() {
+    private void restartGame() { // Khởi động lại trò chơi
         restartButton.setVisible(false);
         inGame = true;
         score = 0;
@@ -173,14 +173,14 @@ public class Board extends JPanel implements ActionListener {
     }
 
     private void initGame() {
-        dots = 3;
+        dots = 3; // Khởi tạo trạng thái ban đầu
 
-        for (int z = 0; z < dots; z++) {
+        for (int z = 0; z < dots; z++) { // Vị trí ban đầu của rắn
             x[z] = 50 - z * 10;
             y[z] = 50;
         }
 
-        locateApple();
+        locateApple(); // Tạo vị trí táo
 
         if (timer != null) {
             timer.stop();
@@ -195,7 +195,7 @@ public class Board extends JPanel implements ActionListener {
         doDrawing(g);
     }
 
-    // Modify the doDrawing method to include the pause overlay
+    // Sửa đổi phương thức doDrawing để bao gồm lớp phủ tạm dừng
     private void doDrawing(Graphics g) {
         if (inGame) {
             g.drawImage(apple, apple_x, apple_y, this);
@@ -217,9 +217,9 @@ public class Board extends JPanel implements ActionListener {
         }
     }
 
-    // Update the drawPauseOverlay method to 80% transparency
+    // Cập nhật phương pháp drawPauseOverlay thành 80% trong suốt
     private void drawPauseOverlay(Graphics g) {
-        Color overlayColor = new Color(0, 0, 0, 204); // 80% transparent black
+        Color overlayColor = new Color(0, 0, 0, 204); // 80% màu đen trong suốt
         g.setColor(overlayColor);
         g.fillRect(0, 0, B_WIDTH, B_HEIGHT);
     }
@@ -237,7 +237,7 @@ public class Board extends JPanel implements ActionListener {
         if (score > highScore) {
             highScore = score;
             saveHighScore();
-            scorePanel.setHighScore(highScore); // Update high score in ScorePanel
+            scorePanel.setHighScore(highScore); // Cập nhật điểm cao trong ScorePanel
         }
 
         restartButton.setVisible(true);
@@ -247,7 +247,7 @@ public class Board extends JPanel implements ActionListener {
         if ((x[0] == apple_x) && (y[0] == apple_y)) {
             dots++;
             score += 10;
-            scorePanel.setScore(score); // Update score in ScorePanel
+            scorePanel.setScore(score); // Cập nhật điểm số trong ScorePanel
             locateApple();
         }
     }
@@ -314,10 +314,10 @@ public class Board extends JPanel implements ActionListener {
     private void loadHighScore() {
         try (BufferedReader reader = new BufferedReader(new FileReader("highscore.txt"))) {
             highScore = Integer.parseInt(reader.readLine());
-            scorePanel.setHighScore(highScore); // Set initial high score in ScorePanel
+            scorePanel.setHighScore(highScore); // Đặt điểm số cao ban đầu trong ScorePanel
         } catch (IOException | NumberFormatException e) {
             highScore = 0;
-            scorePanel.setHighScore(highScore); // Set initial high score in ScorePanel
+            scorePanel.setHighScore(highScore); // Đặt điểm số cao ban đầu trong ScorePanel
         }
     }
 
@@ -340,7 +340,7 @@ public class Board extends JPanel implements ActionListener {
         repaint();
     }
 
-    // Handle ESC key press to pause the game
+    // Xử lý nhấn phím ESC để tạm dừng trò chơi
     private class TAdapter extends KeyAdapter {
         @Override
         public void keyPressed(KeyEvent e) {
@@ -356,7 +356,7 @@ public class Board extends JPanel implements ActionListener {
                 }
             }
 
-            // Existing key handling logic...
+            // Logic xử lý khóa hiện có...
             if (!isPaused) {
                 if ((key == KeyEvent.VK_LEFT) && (!rightDirection)) {
                     leftDirection = true;
