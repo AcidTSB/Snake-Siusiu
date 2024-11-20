@@ -1,4 +1,4 @@
-package com.snakesiusiu;
+package com.snakesiusiu.view;
 
 import javax.swing.JPanel;
 import java.awt.Color;
