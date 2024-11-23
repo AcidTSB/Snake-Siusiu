@@ -1,12 +1,13 @@
 package com.snakesiusiu.controller;
 
-import com.snakesiusiu.model.GameModel;
-import com.snakesiusiu.model.Direction;
-import com.snakesiusiu.view.GameView;
-
-import javax.swing.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+
+import javax.swing.Timer;
+
+import com.snakesiusiu.model.Direction;
+import com.snakesiusiu.model.GameModel;
+import com.snakesiusiu.view.GameView;
 
 public class GameController {
     private final GameModel model;
@@ -16,7 +17,6 @@ public class GameController {
     public GameController(GameModel model, GameView view) {
         this.model = model;
         this.view = view;
-
         initController();
     }
 
@@ -47,7 +47,6 @@ public class GameController {
                 model.setDelay(80);
                 break;
         }
-
         model.initGame();
         view.showGame();
         startTimer();
@@ -104,9 +103,11 @@ public class GameController {
     }
 
     private void pauseGame() {
-        model.setPaused(true);
-        timer.stop();
-        view.showPauseMenu();
+        model.setPaused(true); // Đánh dấu game là đang tạm dừng
+        if (timer != null) {
+            timer.stop(); // Dừng bộ đếm thời gian
+        }
+        view.showPauseMenu(); // Hiển thị menu Pause
     }
 
     private void startTimer() {
