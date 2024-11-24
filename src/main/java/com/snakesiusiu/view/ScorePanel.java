@@ -33,8 +33,8 @@ public class ScorePanel extends JPanel {
     }
 
     private void drawScores(Graphics g) {
-        String scoreMsg = "Score: " + score;
-        String highScoreMsg = "High Score: " + highScore;
+        String scoreMsg = "Điểm: " + score;
+        String highScoreMsg = "Kỉ lục: " + highScore;
         Font small = new Font("Helvetica", Font.BOLD, 14);
 
         g.setColor(Color.white);

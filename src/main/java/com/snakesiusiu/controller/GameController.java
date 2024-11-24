@@ -37,13 +37,13 @@ public class GameController {
     private void startGame() {
         String difficulty = view.getSelectedDifficulty();
         switch (difficulty) {
-            case "Easy":
+            case "Dễ":
                 model.setDelay(240);
                 break;
-            case "Normal":
+            case "Thường":
                 model.setDelay(160);
                 break;
-            case "Hard":
+            case "Khó":
                 model.setDelay(80);
                 break;
         }
@@ -107,6 +107,7 @@ public class GameController {
         model.setPaused(true);
         timer.stop();
         view.showPauseMenu();
+        view.getBoardPanel().repaint();
     }
 
     private void startTimer() {

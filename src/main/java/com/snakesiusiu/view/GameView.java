@@ -44,12 +44,12 @@ public class GameView extends JFrame {
         scorePanel = new ScorePanel();
         boardPanel = new BoardPanel(model);
         
-        startButton = new JButton("Start");
-        restartButton = new JButton("Restart");
-        resumeButton = new JButton("Resume");
-        mainMenuButton = new JButton("Main Menu");
+        startButton = new JButton("Chơi mới");
+        restartButton = new JButton("Chơi lại");
+        resumeButton = new JButton("Tiếp tục");
+        mainMenuButton = new JButton("Menu chính");
         
-        String[] difficulties = {"Easy", "Normal", "Hard"};
+        String[] difficulties = {"Dễ", "Thường", "Khó"};
         difficultyBox = new JComboBox<>(difficulties);
         
         setupLayout();
@@ -101,7 +101,6 @@ public class GameView extends JFrame {
         this.controller = controller;
     }
     
-    // Methods to update view
     public void updateScore(int score) {
         scorePanel.setScore(score);
     }
@@ -124,20 +123,26 @@ public class GameView extends JFrame {
         restartButton.setVisible(false);
         resumeButton.setVisible(false);
         mainMenuButton.setVisible(false);
+        model.setWelcome(false);
+        boardPanel.repaint();
     }
     
     public void showPauseMenu() {
         resumeButton.setVisible(true);
         mainMenuButton.setVisible(true);
+        revalidate();
+        repaint();
+        requestFocusInWindow();
     }
     
     public void showGameOver() {
         restartButton.setVisible(true);
         mainMenuButton.setVisible(true);
+        revalidate();
+        repaint();
         requestFocusInWindow();
     }
     
-    // Add listeners
     public void addStartButtonListener(ActionListener listener) {
         startButton.addActionListener(listener);
     }

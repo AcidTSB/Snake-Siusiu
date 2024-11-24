@@ -23,8 +23,9 @@ public class GameModel {
     private boolean rightDirection = true;
     private boolean upDirection = false;
     private boolean downDirection = false;
-    private boolean inGame = false;
+    private boolean inGame = true;
     private boolean isPaused = false;
+    private boolean isWelcome = true;
     
     public GameModel() {
         loadHighScore();
@@ -34,6 +35,7 @@ public class GameModel {
         dots = 3;
         score = 0;
         inGame = true;
+        isWelcome = true;
         
         for (int z = 0; z < dots; z++) {
             x[z] = 50 - z * 10;
@@ -134,6 +136,8 @@ public class GameModel {
     public void setPaused(boolean paused) { isPaused = paused; }
     public void setDelay(int delay) { this.delay = delay; }
     public int getDelay() { return delay; }
+    public boolean isWelcome() { return isWelcome;}
+    public void setWelcome(boolean welcome) { isWelcome = welcome;}
     
     public void setDirection(Direction direction) {
         switch (direction) {

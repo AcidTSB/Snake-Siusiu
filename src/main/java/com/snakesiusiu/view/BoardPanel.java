@@ -36,7 +36,9 @@ public class BoardPanel extends JPanel {
     }
 
     private void doDrawing(Graphics g) {
-        if (model.isInGame()) {
+        if (model.isWelcome()) {
+            drawWelcomeMessage(g);
+        } else if (model.isInGame()) {
             drawGame(g);
         } else {
             drawGameOver(g);
@@ -60,14 +62,24 @@ public class BoardPanel extends JPanel {
     }
 
     private void drawPauseOverlay(Graphics g) {
-        Color overlayColor = new Color(0, 0, 0, 204); // 80% transparent black
+        Color overlayColor = new Color(0, 0, 0, 204); // 80%
         g.setColor(overlayColor);
         g.fillRect(0, 0, model.getBWidth(), model.getBHeight());
     }
 
+    private void drawWelcomeMessage(Graphics g) {
+        String msg = "Chào mừng đến với Snake Game!";
+        Font small = new Font("Helvetica", Font.BOLD, 14);
+        FontMetrics metr = getFontMetrics(small);
+
+        g.setColor(Color.white);
+        g.setFont(small);
+        g.drawString(msg, (model.getBWidth() - metr.stringWidth(msg)) / 2, model.getBHeight() / 2);
+    }
+
     private void drawGameOver(Graphics g) {
         if (!model.isInGame()) {
-            String msg = "Game Over";
+            String msg = "Thua rồi :(";
             Font small = new Font("Helvetica", Font.BOLD, 14);
             FontMetrics metr = getFontMetrics(small);
     
