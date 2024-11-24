@@ -66,12 +66,14 @@ public class BoardPanel extends JPanel {
     }
 
     private void drawGameOver(Graphics g) {
-        String msg = "Game Over";
-        Font small = new Font("Helvetica", Font.BOLD, 14);
-        FontMetrics metr = getFontMetrics(small);
-
-        g.setColor(Color.white);
-        g.setFont(small);
-        g.drawString(msg, (model.getBWidth() - metr.stringWidth(msg)) / 2, model.getBHeight() / 2);
+        if (!model.isInGame()) {
+            String msg = "Game Over";
+            Font small = new Font("Helvetica", Font.BOLD, 14);
+            FontMetrics metr = getFontMetrics(small);
+    
+            g.setColor(Color.white);
+            g.setFont(small);
+            g.drawString(msg, (model.getBWidth() - metr.stringWidth(msg)) / 2, model.getBHeight() / 2);
+        }
     }
 }

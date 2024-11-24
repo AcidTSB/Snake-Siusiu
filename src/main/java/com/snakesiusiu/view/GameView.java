@@ -55,6 +55,9 @@ public class GameView extends JFrame {
         setupLayout();
         initUI();
         initKeyListener();
+
+        showMainMenu();
+        requestFocusInWindow();
     }
     
     private void setupLayout() {
@@ -66,16 +69,19 @@ public class GameView extends JFrame {
         container.add(boardPanel, BorderLayout.CENTER);
         
         JPanel gamePanel = new JPanel(new BorderLayout());
-        gamePanel.add(boardPanel, BorderLayout.CENTER);
-        
-        JPanel buttonPanel = new JPanel(new GridLayout(4, 1, 10, 10));
+ 
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.setSize(300, 300);
+        buttonPanel.setLocation(0, 150);
+        buttonPanel.setBackground(Color.BLACK);
         buttonPanel.add(startButton);
         buttonPanel.add(restartButton);
         buttonPanel.add(resumeButton);
         buttonPanel.add(mainMenuButton);
         buttonPanel.add(difficultyBox);
         
-        gamePanel.add(buttonPanel, BorderLayout.SOUTH);
+        gamePanel.add(buttonPanel, BorderLayout.CENTER);
+        gamePanel.add(boardPanel, BorderLayout.CENTER);
         
         container.add(gamePanel, BorderLayout.CENTER);
         
@@ -85,7 +91,7 @@ public class GameView extends JFrame {
     
     private void initUI() {
         setTitle("Snake Game");
-        setSize(330, 535);
+        setSize(327, 400);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setResizable(false);
@@ -127,6 +133,8 @@ public class GameView extends JFrame {
     
     public void showGameOver() {
         restartButton.setVisible(true);
+        mainMenuButton.setVisible(true);
+        requestFocusInWindow();
     }
     
     // Add listeners

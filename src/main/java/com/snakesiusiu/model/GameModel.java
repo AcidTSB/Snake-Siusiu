@@ -33,6 +33,7 @@ public class GameModel {
     public void initGame() {
         dots = 3;
         score = 0;
+        inGame = true;
         
         for (int z = 0; z < dots; z++) {
             x[z] = 50 - z * 10;
@@ -83,11 +84,11 @@ public class GameModel {
                 inGame = false;
             }
         }
-        
+    
         if (y[0] >= B_HEIGHT || y[0] < 0 || x[0] >= B_WIDTH || x[0] < 0) {
             inGame = false;
         }
-        
+    
         if (!inGame && score > highScore) {
             highScore = score;
             saveHighScore();
